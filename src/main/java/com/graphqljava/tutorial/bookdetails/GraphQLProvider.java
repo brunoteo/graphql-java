@@ -12,31 +12,23 @@ import graphql.schema.idl.SchemaParser;
 import graphql.schema.idl.TypeDefinitionRegistry;
 import java.io.IOException;
 import java.net.URL;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GraphQLProvider {
-  //FIXME remove the autowired
+
   @Autowired
   private GraphQLDataFetchers graphQLDataFetchers;
 
-  private GraphQL graphQL;
-
   @Bean
-  public GraphQL graphQL() {
-    return graphQL;
-  }
-
-  @PostConstruct
-  public void init() throws IOException {
+  public GraphQL graphQL() throws IOException {
     URL url = Resources.getResource("schema.graphqls");
     String sdl = Resources.toString(url, Charsets.UTF_8);
     GraphQLSchema graphQLSchema = buildSchema(sdl);
 
-    this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
+    return GraphQL.newGraphQL(graphQLSchema).build();
   }
 
   private GraphQLSchema buildSchema(String sdl) {
